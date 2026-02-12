@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Bambi</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #000; color: white;
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; touch-action: none;
+        }
+
+        /* Фон с сердцами */
+        .heart-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; background: #000; overflow: hidden;
+        }
+
+        .falling-heart {
+            position: absolute;
+            color: #222; /* Черные сердца */
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Шлейф сердец за пальцем/курсором */
+        .cursor-heart {
+            position: fixed; color: #ff4d6d; pointer-events: none;
+            z-index: 999; animation: fadeUp 1s forwards;
+            font-size: 20px;
+        }
+        @keyframes fadeUp {
+            to { transform: translateY(-50px) scale(1.5); opacity: 0; }
+        }
+
+        .container {
+            text-align: center; background: rgba(20, 20, 20, 0.85);
+            padding: 25px; border-radius: 25px; backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 85%; max-width: 400px; z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,1);
+        }
+
+        .hidden { display: none !important; }
+        h1, h2 { color: #ff4d6d; margin-bottom: 15px; font-size: 1.5rem; }
+        p { min-height: 1.2em; }
+        
+        button {
+            padding: 15px; font-size: 1rem; border: none; border-radius: 12px;
+            cursor: pointer; transition: transform 0.2s ease; margin: 8px 0;
+            font-weight: bold; width: 100%;
+        }
+
+        #yesBtn { background: #ff4d6d; color: white; width: auto; min-width: 100px; z-index: 11; }
+        #noBtn { 
+            background: #444; color: #bbb; 
+            position: fixed; 
+            width: auto; min-width: 80px; z-index: 12;
+        }
+
+        .task-btn { background: transparent; border: 2px solid #ff4d6d; color: white; }
+        .task-btn:disabled { border-color: #333; color: #555; cursor: not-allowed; }
+        .done-btn { background: white; color: black; }
+        .task-img { width: 100%; border-radius: 15px; margin: 10px 0; border: 1px solid #333; }
+
+        #timer { font-size: 1.1rem; color: #ff4d6d; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="heart-bg" id="heartBg"></div>
+
+    <div id="page1" class="container">
+        <h1>Will you be my valentine, Bambi?</h1>
+        <div style="height: 100px; display: flex; justify-content: center; align-items: center; gap: 20px;">
+            <button id="yesBtn">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div>
+
+    <div id="page2" class="container hidden">
+        <h2 class="typewriter" data-text="To receive your main gift, you must complete 3 tasks:"></h2>
+        <button id="btnTask1" class="task-btn" onclick="showTask(1)">Love is...</button>
+        <button id="btnTask2" class="task-btn" onclick="showTask(2)" disabled>Love is...</button>
+        <button id="btnTask3" class="task-btn" onclick="showTask(3)" disabled>Love is...</button>
+    </div>
+
+    <div id="task1" class="container hidden">
+        <h2>Love is to touch you</h2>
+        <p class="typewriter" data-text="Task 1: Time to touch each other 😏 I want to capture your touch forever!"></p>
+        <img src="task1.jpg" class="task-img">
+        <button class="done-btn" onclick="completeTask(1)">Done</button>
+    </div>
+
+    <div id="task2" class="container hidden">
+        <h2>Love is exploring the unknown together</h2>
+        <p class="typewriter" data-text="Task 2: We’ll have to leave the house. We need to be at a secret place at 1:00 PM! I know my crazy ideas can be hard for you sometimes."></p>
+        <img src="task2.jpg" class="task-img">
+        <button class="done-btn" onclick="completeTask(2)">Done</button>
+    </div>
+
+    <div id="task3" class="container hidden">
+        <h2>Love is when you love her even when she doesn’t cook for you.</h2>
+        <p class="typewriter" data-text="How do you like my latest idea? Task 3: Time to grab something delicious in a place that’s new for you!"></p>
+        <img src="task3.jpg" class="task-img">
+        <button class="done-btn" onclick="completeTask(3)">Done</button>
+    </div>
+
+    <div id="finalPage" class="container hidden">
+        <h2>Congratulations! You’ve won the grand prize — love of your life😏😏😏</h2>
+        <img src="final.jpg" class="task-img">
+        <div id="timer">Calculating our magic...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        // 1. ПАДАЮЩИЕ ЧЕРНЫЕ СЕРДЦА
+        const heartBg = document.getElementById('heartBg');
+        function createFallingHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('falling-heart');
+            heart.innerHTML = '🖤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '-5vh';
+            heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+            heart.style.opacity = Math.random() * 0.5 + 0.2;
+            
+            const duration = Math.random() * 5 + 5;
+            heart.style.transition = `transform ${duration}s linear, opacity ${duration}s`;
+            
+            heartBg.appendChild(heart);
+
+            setTimeout(() => {
+                heart.style.transform = `translateY(110vh) rotate(${Math.random() * 360}deg)`;
+            }, 50);
+
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+        setInterval(createFallingHeart, 300);
+
+        // 2. ШЛЕЙФ СЕРДЕЦ
+        function createCursorHeart(x, y) {
+            const h = document.createElement('div');
+            h.classList.add('cursor-heart');
+            h.innerHTML = '❤️';
+            h.style.left = x + 'px';
+            h.style.top = y + 'px';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 1000);
+        }
+        document.addEventListener('mousemove', (e) => createCursorHeart(e.pageX, e.pageY));
+        document.addEventListener('touchstart', (e) => createCursorHeart(e.touches[0].pageX, e.touches[0].pageY));
+
+        // 3. ПЕЧАТАЮЩИЙСЯ ТЕКСТ
+        function typeWriter(el) {
+            const text = el.getAttribute('data-text');
+            el.innerHTML = '';
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    el.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, 40);
+                }
+            }
+            type();
+        }
+
+        // 4. УБЕГАЮЩАЯ КНОПКА
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        let noScale = 1;
+        let yesScale = 1;
+
+        function moveNo(e) {
+            if(e) e.preventDefault();
+            const padding = 80;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+            const randomX = Math.max(padding, Math.random() * maxX);
+            const randomY = Math.max(padding, Math.random() * maxY);
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            
+            noScale = Math.max(noScale - 0.1, 0.3);
+            yesScale += 0.1;
+            noBtn.style.transform = `scale(${noScale})`;
+            yesBtn.style.transform = `scale(${yesScale})`;
+        }
+        noBtn.addEventListener('mouseenter', moveNo);
+        noBtn.addEventListener('touchstart', moveNo);
+
+        // 5. НАВИГАЦИЯ
+        yesBtn.onclick = () => {
+            confetti({ particleCount: 150, spread: 70 });
+            showPage('page2');
+            setTimeout(() => typeWriter(document.querySelector('#page2 .typewriter')), 500);
+        };
+
+        function showPage(id) {
+            document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function showTask(num) {
+            showPage('task' + num);
+            setTimeout(() => typeWriter(document.querySelector(`#task${num} .typewriter`)), 500);
+        }
+
+        function completeTask(num) {
+            confetti({ particleCount: 50 });
+            if (num < 3) {
+                document.getElementById(`btnTask${num+1}`).disabled = false;
+                showPage('page2');
+            } else {
+                showPage('finalPage');
+                startTimer();
+                setInterval(startTimer, 1000);
+                confetti({ particleCount: 300, spread: 100 });
+            }
+        }
+
+        // 6. ТАЙМЕР
+        function startTimer() {
+            const startDate = new Date('2025-02-13T00:00:00'); 
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / (1000 * 60)) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+            document.getElementById('timer').innerHTML = `Together for: ${days}d ${hours}h ${mins}m ${secs}s ❤️`;
+        }
+    </script>
+</body>
+</html>
