@@ -11,65 +11,79 @@
             background-color: #000; color: white;
             overflow: hidden;
             display: flex; justify-content: center; align-items: center;
-            height: 100vh; touch-action: none;
+            height: 100vh;
         }
 
+        /* Фон с черными сердцами */
         .heart-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; background: #000; overflow: hidden;
         }
 
         .falling-heart {
-            position: absolute; color: #222;
-            user-select: none; pointer-events: none; z-index: 1;
+            position: absolute; color: #222; font-size: 20px;
+            animation: float 8s linear infinite;
         }
 
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Шлейф сердец */
         .cursor-heart {
             position: fixed; color: #ff4d6d; pointer-events: none;
             z-index: 999; animation: fadeUp 1s forwards; font-size: 20px;
         }
-        @keyframes fadeUp {
-            to { transform: translateY(-50px) scale(1.5); opacity: 0; }
-        }
+        @keyframes fadeUp { to { transform: translateY(-50px) scale(1.5); opacity: 0; } }
 
         .container {
-            text-align: center; background: rgba(20, 20, 20, 0.9);
-            padding: 20px; border-radius: 25px; backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 85%; max-width: 380px; z-index: 10;
-            max-height: 90vh; overflow-y: auto; /* Добавлена прокрутка внутри */
+            text-align: center; background: rgba(255, 255, 255, 0.1);
+            padding: 25px; border-radius: 20px; backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 85%; max-width: 400px; z-index: 10;
+            max-height: 90vh; overflow-y: auto;
+            scrollbar-width: none;
         }
+        .container::-webkit-scrollbar { display: none; }
 
         .hidden { display: none !important; }
-        h1, h2 { color: #ff4d6d; margin-bottom: 15px; font-size: 1.4rem; }
-        
+        h1, h2 { color: #ff4d6d; margin-bottom: 20px; }
+
         button {
-            padding: 12px; font-size: 1rem; border: none; border-radius: 12px;
-            cursor: pointer; margin: 8px 0; font-weight: bold; width: 100%;
+            padding: 15px 25px; font-size: 1.1rem; border: none; border-radius: 50px;
+            cursor: pointer; transition: 0.3s; font-weight: bold;
         }
 
-        #yesBtn { background: #ff4d6d; color: white; width: auto; min-width: 100px; position: relative; z-index: 5; }
+        #yesBtn { background-color: #ff4d4d; color: white; }
+        #yesBtn:hover { transform: scale(1.1); box-shadow: 0 0 15px #ff4d4d; }
+
         #noBtn { 
-            background: #444; color: #bbb; 
-            position: fixed; width: auto; min-width: 80px; z-index: 20;
-            transition: 0.1s ease; /* Быстрое перемещение */
+            background-color: #555; 
+            color: white; 
+            /* initial layout, inline with Yes button */
         }
 
-        .task-btn { background: transparent; border: 2px solid #ff4d6d; color: white; }
-        .task-btn:disabled { border-color: #333; color: #555; }
-        .done-btn { background: white; color: black; margin-top: 10px; }
-        
-        /* Исправление для фото */
-        .task-img { 
-            width: 100%; 
-            max-height: 250px; /* Ограничение высоты */
-            object-fit: cover; /* Сохранение пропорций */
-            border-radius: 15px; 
-            margin: 10px 0; 
-            border: 1px solid #333; 
+        /* Стили для кнопок заданий */
+        .task-btn {
+            display: block; width: 100%; background-color: transparent;
+            border: 2px solid #ff4d6d; color: white; margin: 15px 0;
+            transition: 0.3s;
+        }
+        .task-btn:hover:not(:disabled) {
+            background-color: #ff4d6d;
+            box-shadow: 0 0 10px #ff4d6d;
+        }
+        .task-btn:disabled {
+            border-color: #333; color: #555; cursor: not-allowed;
         }
 
-        #timer { font-size: 1rem; color: #ff4d6d; margin-top: 15px; font-weight: bold; padding-bottom: 10px; }
+        .done-btn { background: white; color: black; width: 100%; }
+        .done-btn:hover { background: #eee; }
+
+        .task-img { width: 100%; max-height: 250px; border-radius: 15px; margin: 10px 0; object-fit: cover; }
+
+        #timer { font-size: 1rem; color: #ff4d6d; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -78,7 +92,7 @@
 
     <div id="page1" class="container">
         <h1>Will you be my valentine, Bambi?</h1>
-        <div style="height: 120px; display: flex; justify-content: center; align-items: center;">
+        <div class="buttons-row">
             <button id="yesBtn">Yes</button>
             <button id="noBtn">No</button>
         </div>
@@ -92,57 +106,52 @@
     </div>
 
     <div id="task1" class="container hidden">
-        <h2>Love is to touch you</h2>
+        <h2>Love is to touch you.</h2>
         <p class="typewriter" data-text="Task 1: Time to touch each other 😏 I want to capture your touch forever!"></p>
         <img src="task1.jpg" class="task-img">
         <button class="done-btn" onclick="completeTask(1)">Done</button>
     </div>
 
     <div id="task2" class="container hidden">
-        <h2>Love is exploring the unknown together</h2>
-        <p class="typewriter" data-text="Task 2: We’ll have to leave the house. We need to be at a secret place at 1:00 PM!"></p>
+        <h2>Love is exploring the unknown together.</h2>
+        <p class="typewriter" data-text="Task 2: We are leaving the house. We need to be at a secret place at 1:00 PM!"></p>
         <img src="task2.jpg" class="task-img">
         <button class="done-btn" onclick="completeTask(2)">Done</button>
     </div>
 
     <div id="task3" class="container hidden">
         <h2>Love is when you love her even when she doesn’t cook for you.</h2>
-        <p class="typewriter" data-text="How do you like my latest idea? Task 3: Time to grab something delicious in a place that’s new for you!"></p>
+        <p class="typewriter" data-text="Task 3: Time to grab something delicious in a new place!"></p>
         <img src="task3.jpg" class="task-img">
         <button class="done-btn" onclick="completeTask(3)">Done</button>
     </div>
 
     <div id="finalPage" class="container hidden">
-        <h2>Congratulations! You’ve won the grand prize — love of your life😏😏😏</h2>
+        <h2>Congratulations! You’ve won the grand prize — love of your life😏</h2>
         <img src="final.jpg" class="task-img">
-        <div id="timer">Calculating our magic...</div>
+        <div id="timer">Calculating...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         // Черные сердца
-        function createFallingHeart() {
+        const heartBg = document.getElementById('heartBg');
+        for (let i = 0; i < 30; i++) {
             const heart = document.createElement('div');
             heart.classList.add('falling-heart');
             heart.innerHTML = '🖤';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = '-5vh';
-            heart.style.fontSize = Math.random() * 20 + 15 + 'px';
-            const duration = Math.random() * 5 + 5;
-            heart.style.transition = `transform ${duration}s linear`;
-            document.getElementById('heartBg').appendChild(heart);
-            setTimeout(() => { heart.style.transform = `translateY(110vh) rotate(360deg)`; }, 50);
-            setTimeout(() => { heart.remove(); }, duration * 1000);
+            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heartBg.appendChild(heart);
         }
-        setInterval(createFallingHeart, 400);
 
         // Шлейф
         document.addEventListener('mousemove', (e) => createCursorHeart(e.pageX, e.pageY));
         document.addEventListener('touchstart', (e) => createCursorHeart(e.touches[0].pageX, e.touches[0].pageY));
         function createCursorHeart(x, y) {
             const h = document.createElement('div');
-            h.classList.add('cursor-heart');
-            h.innerHTML = '❤️';
+            h.classList.add('cursor-heart'); h.innerHTML = '❤️';
             h.style.left = x + 'px'; h.style.top = y + 'px';
             document.body.appendChild(h);
             setTimeout(() => h.remove(), 1000);
@@ -151,34 +160,42 @@
         // Текст
         function typeWriter(el) {
             const text = el.getAttribute('data-text');
-            el.innerHTML = '';
-            let i = 0;
-            function type() {
-                if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(type, 40); }
-            }
+            el.innerHTML = ''; let i = 0;
+            function type() { if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(type, 40); } }
             type();
         }
 
-        // КНОПКА NO (Только убегание)
+        // УБЕГАЮЩАЯ КНОПКА
         const noBtn = document.getElementById('noBtn');
-        function moveNo(e) {
-            if(e) e.preventDefault();
-            const padding = 60;
-            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-            const randomX = Math.max(padding, Math.random() * maxX);
-            const randomY = Math.max(padding, Math.random() * maxY);
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
-        }
-        noBtn.addEventListener('mouseenter', moveNo);
-        noBtn.addEventListener('touchstart', moveNo);
+        let isJumping = false; // flag to switch to fixed position
 
-        // Навигация
+        function moveNo() {
+            if (!isJumping) {
+                isJumping = true;
+                const rect = noBtn.getBoundingClientRect();
+                noBtn.style.position = 'fixed';
+                noBtn.style.left = rect.left + 'px';
+                noBtn.style.top = rect.top + 'px';
+                noBtn.style.transform = 'none';
+            }
+
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        }
+
+        noBtn.addEventListener('mouseover', moveNo);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(); });
+
+        // НАВИГАЦИЯ
         document.getElementById('yesBtn').onclick = () => {
             confetti({ particleCount: 150, spread: 70 });
-            showPage('page2');
-            setTimeout(() => typeWriter(document.querySelector('#page2 .typewriter')), 400);
+            setTimeout(() => {
+                showPage('page2');
+                typeWriter(document.querySelector('#page2 .typewriter'));
+            }, 800);
         };
 
         function showPage(id) {
@@ -188,7 +205,7 @@
 
         function showTask(num) {
             showPage('task' + num);
-            setTimeout(() => typeWriter(document.querySelector(`#task${num} .typewriter`)), 400);
+            setTimeout(() => typeWriter(document.querySelector(`#task${num} .typewriter`)), 300);
         }
 
         function completeTask(num) {
