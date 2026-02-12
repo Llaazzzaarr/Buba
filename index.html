@@ -61,7 +61,7 @@
         #noBtn { 
             background-color: #555; 
             color: white; 
-            /* initial layout, inline with Yes button */
+            /* Keep initial layout normal; no position set initially */
         }
 
         /* Стили для кнопок заданий */
@@ -106,22 +106,22 @@
     </div>
 
     <div id="task1" class="container hidden">
-        <h2>Love is to touch you.</h2>
+        <h2>Love is to touch you</h2>
         <p class="typewriter" data-text="Task 1: Time to touch each other 😏 I want to capture your touch forever!"></p>
         <img src="task1.jpg" class="task-img">
         <button class="done-btn" onclick="completeTask(1)">Done</button>
     </div>
 
     <div id="task2" class="container hidden">
-        <h2>Love is exploring the unknown together.</h2>
-        <p class="typewriter" data-text="Task 2: We are leaving the house. We need to be at a secret place at 1:00 PM!"></p>
+        <h2>Love is exploring the unknown together</h2>
+        <p class="typewriter" data-text="Task 2: We’ll have to leave the house. We need to be at a secret place at 1:00 PM!"></p>
         <img src="task2.jpg" class="task-img">
         <button class="done-btn" onclick="completeTask(2)">Done</button>
     </div>
 
     <div id="task3" class="container hidden">
         <h2>Love is when you love her even when she doesn’t cook for you.</h2>
-        <p class="typewriter" data-text="Task 3: Time to grab something delicious in a new place!"></p>
+        <p class="typewriter" data-text="How do you like my latest idea? Task 3: Time to grab something delicious in a new place!"></p>
         <img src="task3.jpg" class="task-img">
         <button class="done-btn" onclick="completeTask(3)">Done</button>
     </div>
@@ -167,18 +167,21 @@
 
         // УБЕГАЮЩАЯ КНОПКА
         const noBtn = document.getElementById('noBtn');
-        let isJumping = false; // flag to switch to fixed position
+        let isJumping = false;
 
         function moveNo() {
             if (!isJumping) {
                 isJumping = true;
+                // Move button to body so it can jump freely
                 const rect = noBtn.getBoundingClientRect();
-                noBtn.style.position = 'fixed';
+                document.body.appendChild(noBtn);
+                noBtn.style.position = 'absolute';
                 noBtn.style.left = rect.left + 'px';
                 noBtn.style.top = rect.top + 'px';
                 noBtn.style.transform = 'none';
             }
 
+            // Random position inside viewport
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
 
