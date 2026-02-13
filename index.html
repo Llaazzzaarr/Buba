@@ -60,7 +60,7 @@
         .done-btn { background: white; color: black; width: 100%; }
         .done-btn:hover { background: #eee; }
 
-        .task-img { width: 100%; height: 500px; border-radius: 15px; margin: 10px 0; object-fit: cover; }
+        .task-img { width: 100%; height: 700px; border-radius: 15px; margin: 10px 0; object-fit: cover; }
 
 
         /* Поле ввода */
@@ -109,14 +109,14 @@
     </div>
 
     <div id="task1" class="container hidden">
-        <h2>Love is to touch you</h2>
+        <h2 style="color:var(--pink)">Love is to touch you.</h2>
         <p class="typewriter" data-text="Task 1: Time to touch each other 😏 I want to capture your touch forever!"></p>
         <img src="task1.jpg" class="task-img">
         <button class="done-btn" onclick="completeTask(1)">Done</button>
     </div>
 
     <div id="task2" class="container hidden">
-        <h2>Love is exploring the unknown together</h2>
+        <h2 style="color:var(--pink)"> Love is exploring the unknown together.</h2>
         <p class="typewriter" data-text="Task 2: We’ll have to leave the house. We need to be at a secret place at 1:00 PM!"></p>
         <img src="task2.jpg" class="task-img">
         <button class="done-btn" onclick="completeTask(2)">Done</button>
@@ -537,7 +537,6 @@ mi lesz a fiatal nő végtelen terveivel —
 megjelennek-e végre az álmok
 az ő varázslatos férfijának szívében.
 </div>
-
         <div id="timer">Calculating time together...</div>
     </div>
 
@@ -594,7 +593,7 @@ az ő varázslatos férfijának szívében.
 
         window.scrollTo(0, 0);
 
-        // 🔥 Automatically run typewriter on all elements inside page
+        //  run typewriter on all elements inside page
         page.querySelectorAll('.typewriter').forEach(el => {
             typeWriter(el);
         });
@@ -638,7 +637,7 @@ az ő varázslatos férfijának szívében.
     const finalPass = document.getElementById('finalPass');
 
     finalPass.addEventListener('input', () => {
-        if (finalPass.value.toLowerCase().trim() === 'anything') {
+        if (finalPass.value.toLowerCase().trim() === 'AWAWU') {
 
             confetti({
                 particleCount: 200,
@@ -737,6 +736,7 @@ function toggleLang(lang) {
 </script>
 </body>
 </html>
+
 
 
 
