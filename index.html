@@ -5,66 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For My Bambi</title>
     <style>
+        :root { --pink: #ff4d6d; --dark-bg: #0a0a0a; }
         body {
-            margin: 0; padding: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #000; color: white;
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh;
+             margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #000;
+    color: white;
+
+    overflow-x: hidden;   /* only hide horizontal scroll */
+    overflow-y: auto;     /* allow vertical scroll */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;    /* allow body to grow */
         }
 
-        /* Фон с черными сердцами */
-        .heart-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; background: #000; overflow: hidden;
-        }
+        /* Фон */
+        .heart-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; overflow: hidden; }
+        .falling-heart { position: absolute; color: #222; font-size: 20px; animation: float 8s linear infinite; }
+        @keyframes float { 0% { transform: translateY(110vh); opacity: 1; } 100% { transform: translateY(-10vh); opacity: 0; } }
 
-        .falling-heart {
-            position: absolute; color: #222; font-size: 20px;
-            animation: float 8s linear infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-        }
-
-        /* Шлейф сердец */
-        .cursor-heart {
-            position: fixed; color: #ff4d6d; pointer-events: none;
-            z-index: 999; animation: fadeUp 1s forwards; font-size: 20px;
-        }
-        @keyframes fadeUp { to { transform: translateY(-50px) scale(1.5); opacity: 0; } }
-
+        /* Контейнеры */
         .container {
-            text-align: center; background: rgba(255, 255, 255, 0.1);
-            padding: 25px; border-radius: 20px; backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            width: 85%; max-width: 400px; z-index: 10;
-            max-height: 90vh; overflow-y: auto;
-            scrollbar-width: none;
+            text-align: center; background: rgba(20, 20, 20, 0.9);
+            padding: 30px; border-radius: 20px; backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%; max-width: 500px; z-index: 10; position: relative;
         }
-        .container::-webkit-scrollbar { display: none; }
-
         .hidden { display: none !important; }
-        h1, h2 { color: #ff4d6d; margin-bottom: 20px; }
 
+        /* Кнопки */
         button {
-            padding: 15px 25px; font-size: 1.1rem; border: none; border-radius: 50px;
-            cursor: pointer; transition: 0.3s; font-weight: bold;
+            padding: 15px 25px; font-size: 1rem; border: none; border-radius: 50px;
+            cursor: pointer; transition: 0.3s; font-weight: bold; margin: 10px;
         }
-
-        #yesBtn { background-color: #ff4d4d; color: white; }
-        #yesBtn:hover { transform: scale(1.1); box-shadow: 0 0 15px #ff4d4d; }
-
-        #noBtn { 
-            background-color: #555; 
-            color: white; 
-            /* Keep initial layout normal; no position set initially */
-        }
-
-        /* Стили для кнопок заданий */
+        #yesBtn { background: var(--pink); color: white; }
+        #noBtn { background: #444; color: #ccc;}
+       /* Стили для кнопок заданий */
         .task-btn {
             display: block; width: 100%; background-color: transparent;
             border: 2px solid #ff4d6d; color: white; margin: 15px 0;
@@ -83,7 +62,31 @@
 
         .task-img { width: 100%; max-height: 250px; border-radius: 15px; margin: 10px 0; object-fit: cover; }
 
-        #timer { font-size: 1rem; color: #ff4d6d; margin-top: 15px; font-weight: bold; }
+
+        /* Поле ввода */
+        .pass-container { margin-top: 20px; padding: 20px; border-top: 1px solid #333; }
+        input {
+            background: #1a1a1a; border: 1px solid var(--pink); color: white;
+            padding: 12px; border-radius: 8px; width: 80%; text-align: center; font-size: 1.1rem;
+        }
+
+        /* Конверт и Письмо */
+        .letter-container {
+            background: #fdf5e6; color: #2c2c2c; padding: 40px 25px;
+            border-radius: 5px; box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            max-width: 600px; line-height: 1.6; text-align: left;
+            position: relative; margin: 20px auto; overflow-y: auto; max-height: 80vh;
+        }
+        .letter-container h2 { color: #8b0000; text-align: center; border-bottom: 1px solid #dcdcdc; padding-bottom: 10px; }
+        .letter-text { font-size: 1.05rem; white-space: pre-wrap; margin-bottom: 30px; }
+        .poem { font-style: italic; color: #555; border-left: 3px solid var(--pink); padding-left: 15px; margin: 20px 0; }
+        
+        #timer { font-weight: bold; text-align: center; color: var(--pink); font-size: 1.2rem; border-top: 1px solid #ddd; padding-top: 20px; }
+
+        .cursor-heart { position: fixed; color: var(--pink); pointer-events: none; z-index: 999; animation: fadeUp 1s forwards; }
+        @keyframes fadeUp { to { transform: translateY(-40px); opacity: 0; } }
+
+        .task-img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -92,7 +95,7 @@
 
     <div id="page1" class="container">
         <h1>Will you be my valentine, Bambi?</h1>
-        <div class="buttons-row">
+        <div style="height: 120px; display: flex; justify-content: center; align-items: center;">
             <button id="yesBtn">Yes</button>
             <button id="noBtn">No</button>
         </div>
@@ -126,115 +129,289 @@
         <button class="done-btn" onclick="completeTask(3)">Done</button>
     </div>
 
-    <div id="finalPage" class="container hidden">
-        <h2>Congratulations! You’ve won the grand prize — love of your life😏</h2>
-        <img src="final.jpg" class="task-img">
-        <div id="timer">Calculating...</div>
+    <div id="passwordPage" class="container hidden">
+        <h2 style="color:var(--pink)">Congratulations! You’ve won the grand prize — love of your life😏</h2>
+        <h2 style="color:var(--pink)">The Last Step</h2>
+        <p>Finish the sentence:</p>
+        <p style="font-size: 1.2rem; font-style: italic;">"I love you more than ..."</p>
+        <input type="text" id="finalPass" placeholder="three words here">
+        <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 10px;">(Hint: anything)</p>
+    </div>
+
+    <div id="letterPage" class="letter-container hidden">
+        <h2>Our Story</h2>
+        <div class="letter-text">
+<strong>SHE</strong>
+She was, as all good girls are supposed to be, always prepared for tomorrow. 
+Her uniform was neatly folded the night before, her bed perfectly made each morning.
+
+She was not exceptionally brilliant, nor particularly gifted. Yet diligence allowed her to stand proudly among the clever ones — though she was never truly comfortable there. In truth, she lived in quiet terror. Her palms would grow damp at the thought that one of the brightest girls might ask her something complicated, something she would not know how to answer.
+
+Discipline gave her everything. Everything she believed truly mattered: grades — and with them, the respect of those elevated faces she admired from below. Her homework was assessed as though Her Majesty the Queen herself were passing judgment, as if her entire life depended on the mark she received.
+
+She never had to tear pages from her school diary — no one ever checked it. They simply expected excellence in silence. But from her personal journal, pages were torn out with astonishing speed and unbearable heaviness.
+
+In discipline, success has only one measurement: a good grade. And so everything in the young lady’s life became measurable. Every minute spent, every coin used, every crumb eaten. Her life moved by hours and minutes — sometimes rushing forward at impossible speed, sometimes flowing like thick resin through her fragile body.
+
+Rules were the foundation of her discipline. Over time, she accumulated so many that entire sections of civil law might have envied her collection. And she followed them more strictly than any constitution has ever truly been obeyed. As a child, she convinced herself that these rules would protect her from the dangers and darkness of the outside world — a world in which she believed she was often unwelcome.
+
+It will not surprise you that mathematics was her favorite subject. The square was, in her opinion, the most perfect shape in existence. And her favorite hobby was planning.
+
+And yet — it was never entirely true. Or perhaps it was never true at all.
+For she was always late. Her hair was often untidy; teachers would indignantly braid it during the first break. Her notebooks were torn, misplaced, or lost altogether.
+
+The endless enforcement of her strict rules led, inevitably, to daily failure. And so each day she delivered her verdict upon herself:
+“Miss…, you are hereby sentenced to twenty-five years of rigorous planning and replanning, strategizing and self-reconstruction — until you lose your mind.”
+
+Years passed in the dull intertwining of deep black and fading gray, yet she continued to long for red and violet.
+
+As she grew older, she often sought comfort in planning a future with someone. Of course, being a “realist,” she did not dream of princes. She aspired only to practicality, a touch of dry materialism, and at most — a teaspoon of adventure.
+
+By eighteen, her defenses could rival any fortress. Despite the complete failure of her plans to ever truly hit their targets, she continued planning further and further.
+She led herself into that emptiness — and for a long time, did not know how to leave it.
+
+<strong>HE</strong>
+Meanwhile, more than a thousand kilometers away, an extraordinary and slightly mad boy was growing up.
+
+He could be described by his laughter alone — laughter bright enough to illuminate a hall of a thousand people. It rang like a violin, though refinement was not quite the word for him. His movements resembled a trumpet — bold, unfiltered — yet the delicacy of his soul sounded like the highest string notes.
+
+He loved life itself — not a particular hobby or idea, but life in its raw presence. Today was today, and planning tomorrow made no sense at all.
+
+He possessed an unusual sensitivity to people. Though certain emotions were foreign to him for reasons of his own, he learned them through the lives of others. His own life had always been divided in two — as he himself had been. And when something splits in two, especially a human soul, pieces inevitably break off. Some of his fragments may have been lost forever; others he continues to rediscover within himself even now.
+
+Yet despite that fracture, his heart remained whole — and genuinely full of love. That is why he entered love stories so easily. And in each of them, he loved fiercely — like fire, like a storm — without fear. Living fully in the present allowed him to give everything, as if he might be reborn again tomorrow.
+
+Of course, he had fears. They were hidden in those tiny fragments of himself — visible only to someone capable of helping him piece his soul together again.
+
+He never needed the best. He could always find “enough.”
+He never searched for balance — he simply existed within it, so naturally that it almost seemed nonexistent.
+
+He did not know what he wanted from life. But he knew he did not need to know — not while life itself was flowing.
+He could surrender to the current without drowning in it.
+
+He was not a genius, nor wildly talented, and he did not need to be. Yet in his eyes there often flickered a love for creation. His flexibility in life followed from the flexibility of his mind. And such a mind granted him charisma, bright humor, and a presence that entered every room with a small yet thunderous monologue. He burned brightly like a match — and burned out just as quickly, retreating into quiet corners until he felt ready to ignite again.
+
+He was a layered personality — like puff pastry. So many layers. Sometimes sweet inside, sometimes sour. And sometimes — empty.
+
+<strong>THEY</strong>
+On February 13, 2025, a thousand kilometers suddenly collapsed into zero. Two seemingly opposite forces collided.
+Like magnets with opposing poles, they were drawn toward one another.
+But as we know, magnets can repel if turned the wrong way.
+And so it happened with them.
+They changed each other’s lives forever.
+
+She still struggles daily against his current; he learns to navigate around her plans. She is learning, for the first time, to trust. He is learning to climb walls of infinite thickness and height. She awakens in him a desire for more; he teaches her the balance she so desperately needs. She opens new emotional territories for him; he understands her without words.
+
+Thus two opposites begin to form the most delicate kind of harmony.
+They are capable of separating — yet always feel the pull back toward one another. Sometimes they must push each other away for a moment, only to return to the right polarity.
+Their remarkable story is only beginning.
+
+And I cannot help but wonder what will become of the young lady’s endless plans — and whether dreams will finally appear in the heart of her magical man.
+
+<div class="poem">
+How simple life in black and white,
+I wore a mask, appeared so bright.
+All under control, all lines clear,
+No need to change, no room for fear.
+
+But white holds not the yellow hue -
+The shade of joy that breaks right through.
+Nor does it hold the peace of blue,
+Nor red, where love is strong and true.
+
+In black, there’s only anxious dread,
+A hollow void, a life half-dead.
+Calculated till the end,
+Predictable, from dusk to dawn.
+
+But that was once, not long before
+I saw a canvas, rich in lore.
+With colors bold, it changed my view - 
+And fear just vanished, “I love you”.
+</div>
+        </div>
+        <div id="timer">Calculating time together...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <script>
-        // Черные сердца
-        const heartBg = document.getElementById('heartBg');
-        for (let i = 0; i < 30; i++) {
-            const heart = document.createElement('div');
-            heart.classList.add('falling-heart');
-            heart.innerHTML = '🖤';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heartBg.appendChild(heart);
-        }
+<script>
 
-        // Шлейф
-        document.addEventListener('mousemove', (e) => createCursorHeart(e.pageX, e.pageY));
-        document.addEventListener('touchstart', (e) => createCursorHeart(e.touches[0].pageX, e.touches[0].pageY));
-        function createCursorHeart(x, y) {
-            const h = document.createElement('div');
-            h.classList.add('cursor-heart'); h.innerHTML = '❤️';
-            h.style.left = x + 'px'; h.style.top = y + 'px';
-            document.body.appendChild(h);
-            setTimeout(() => h.remove(), 1000);
-        }
+    // =========================
+    // HEART BACKGROUND
+    // =========================
+    const heartBg = document.getElementById('heartBg');
+    for (let i = 0; i < 25; i++) {
+        const h = document.createElement('div');
+        h.className = 'falling-heart';
+        h.innerHTML = '🖤';
+        h.style.left = Math.random() * 100 + 'vw';
+        h.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        h.style.animationDelay = Math.random() * 5 + 's';
+        heartBg.appendChild(h);
+    }
 
-        // Текст
-        function typeWriter(el) {
-            const text = el.getAttribute('data-text');
-            el.innerHTML = ''; let i = 0;
-            function type() { if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(type, 40); } }
-            type();
-        }
 
-        // УБЕГАЮЩАЯ КНОПКА
-        const noBtn = document.getElementById('noBtn');
-        let isJumping = false;
+    // =========================
+    // TYPEWRITER (SAFE VERSION)
+    // =========================
+    function typeWriter(el) {
+        if (!el) return;
+        const text = el.getAttribute('data-text');
+        if (!text) return;
 
-        function moveNo() {
-            if (!isJumping) {
-                isJumping = true;
-                // Move button to body so it can jump freely
-                const rect = noBtn.getBoundingClientRect();
-                document.body.appendChild(noBtn);
-                noBtn.style.position = 'absolute';
-                noBtn.style.left = rect.left + 'px';
-                noBtn.style.top = rect.top + 'px';
-                noBtn.style.transform = 'none';
-            }
+        el.innerHTML = '';
+        let i = 0;
 
-            // Random position inside viewport
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-        }
-
-        noBtn.addEventListener('mouseover', moveNo);
-        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(); });
-
-        // НАВИГАЦИЯ
-        document.getElementById('yesBtn').onclick = () => {
-            confetti({ particleCount: 150, spread: 70 });
-            setTimeout(() => {
-                showPage('page2');
-                typeWriter(document.querySelector('#page2 .typewriter'));
-            }, 800);
-        };
-
-        function showPage(id) {
-            document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        function showTask(num) {
-            showPage('task' + num);
-            setTimeout(() => typeWriter(document.querySelector(`#task${num} .typewriter`)), 300);
-        }
-
-        function completeTask(num) {
-            confetti({ particleCount: 50 });
-            if (num < 3) {
-                document.getElementById(`btnTask${num+1}`).disabled = false;
-                showPage('page2');
-            } else {
-                showPage('finalPage');
-                startTimer();
-                setInterval(startTimer, 1000);
-                confetti({ particleCount: 300, spread: 100 });
+        function type() {
+            if (i < text.length) {
+                el.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, 40);
             }
         }
+        type();
+    }
 
-        function startTimer() {
-            const startDate = new Date('2025-02-13T00:00:00'); 
-            const now = new Date();
-            const diff = now - startDate;
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const m = Math.floor((diff / (1000 * 60)) % 60);
-            const s = Math.floor((diff / 1000) % 60);
-            document.getElementById('timer').innerHTML = `Together for: ${d}d ${h}h ${m}m ${s}s ❤️`;
+
+    // =========================
+    // PAGE SWITCHING
+    // =========================
+    function showPage(id) {
+        document
+            .querySelectorAll('.container, .letter-container')
+            .forEach(c => c.classList.add('hidden'));
+
+        const page = document.getElementById(id);
+        page.classList.remove('hidden');
+
+        window.scrollTo(0, 0);
+
+        // 🔥 Automatically run typewriter on all elements inside page
+        page.querySelectorAll('.typewriter').forEach(el => {
+            typeWriter(el);
+        });
+    }
+
+
+    // =========================
+    // YES BUTTON
+    // =========================
+    document.getElementById('yesBtn').onclick = () => {
+        confetti({ particleCount: 150, spread: 70 });
+
+        setTimeout(() => {
+            showPage('page2');
+        }, 800);
+    };
+
+
+    // =========================
+    // TASKS
+    // =========================
+    function showTask(num) {
+        showPage('task' + num);
+    }
+
+    function completeTask(num) {
+        confetti({ particleCount: 50 });
+
+        if (num < 3) {
+            document.getElementById('btnTask' + (num + 1)).disabled = false;
+            showPage('page2');
+        } else {
+            showPage('passwordPage');
         }
-    </script>
+    }
+
+
+    // =========================
+    // FINAL PASSWORD
+    // =========================
+    const finalPass = document.getElementById('finalPass');
+
+    finalPass.addEventListener('input', () => {
+        if (finalPass.value.toLowerCase().trim() === 'anything') {
+
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { y: 0.6 }
+            });
+
+            showPage('letterPage');
+
+            startTimer();
+            setInterval(startTimer, 1000);
+        }
+    });
+
+
+    // =========================
+    // TIMER
+    // =========================
+    function startTimer() {
+        const start = new Date('2025-02-13T00:00:00');
+        const diff = new Date() - start;
+
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff / 3600000) % 24);
+        const m = Math.floor((diff / 60000) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+
+        document.getElementById('timer').innerHTML =
+            `Together for: ${d}d ${h}h ${m}m ${s}s ❤️`;
+    }
+
+
+    // =========================
+    // RUNAWAY NO BUTTON
+    // =========================
+    const noBtn = document.getElementById('noBtn');
+    let isJumping = false;
+
+    function moveNo() {
+        if (!isJumping) {
+            isJumping = true;
+
+            const rect = noBtn.getBoundingClientRect();
+            document.body.appendChild(noBtn);
+
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = rect.left + 'px';
+            noBtn.style.top = rect.top + 'px';
+            noBtn.style.transform = 'none';
+        }
+
+        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
+    }
+
+    noBtn.addEventListener('mouseover', moveNo);
+    noBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        moveNo();
+    });
+
+
+    // =========================
+    // CURSOR HEART TRAIL
+    // =========================
+    document.addEventListener('mousemove', (e) => {
+        const h = document.createElement('div');
+        h.className = 'cursor-heart';
+        h.innerHTML = '❤️';
+
+        h.style.left = e.pageX + 'px';
+        h.style.top = e.pageY + 'px';
+
+        document.body.appendChild(h);
+
+        setTimeout(() => h.remove(), 1000);
+    });
+
+</script>
 </body>
 </html>
-
